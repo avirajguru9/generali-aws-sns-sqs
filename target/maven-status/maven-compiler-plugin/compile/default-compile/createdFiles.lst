@@ -1,0 +1,5 @@
+com\generali\aws\Application.class
+com\generali\aws\SnsPublisherService.class
+com\generali\aws\AwsConfig.class
+com\generali\aws\Policy.class
+com\generali\aws\PolicyController.class
