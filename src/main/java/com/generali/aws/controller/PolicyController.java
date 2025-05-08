@@ -17,11 +17,6 @@ public class PolicyController {
 	@Autowired
     private SqsSenderService sqsSenderService;
 
-//    public PolicyController(SnsPublisherService snsPublisherService, SqsSenderService sqsSenderService) {
-//        this.snsPublisherService = snsPublisherService;
-//        this.sqsSenderService = sqsSenderService;
-//    }
-
     @PostMapping
     public ResponseEntity<String> createPolicy(@RequestBody Policy policy) {
         snsPublisherService.publish(policy);
@@ -30,7 +25,8 @@ public class PolicyController {
 
     @PostMapping("/send-to-sqs")
     public ResponseEntity<String> sendToSqs(@RequestBody Policy policy) {
-        sqsSenderService.sendMessage(policy.toString()); // or use ObjectMapper to convert to JSON
+        sqsSenderService.sendMessage(policy);  // don't call .toString()
         return ResponseEntity.ok("Policy message sent to SQS");
     }
+
 }

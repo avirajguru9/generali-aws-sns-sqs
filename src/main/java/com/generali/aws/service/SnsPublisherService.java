@@ -36,7 +36,7 @@ public class SnsPublisherService {
                     .message(message)
                     .build();
             snsClient.publish(request);
-            System.out.println("Published to SNS: " + message);
+            System.out.println("Creating SQS queue: " + message);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Failed to serialize policy", e);
         }

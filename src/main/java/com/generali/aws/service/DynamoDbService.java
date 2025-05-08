@@ -3,6 +3,8 @@ package com.generali.aws.service;
 import com.generali.aws.entity.PolicyDynamo;
 import com.generali.aws.model.Policy;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
@@ -29,17 +31,20 @@ public class DynamoDbService {
         policyTable.putItem(policyDynamo);
         System.out.println("Saved to DynamoDB: " + policyDynamo);
     }
-//    
-//    public PolicyDynamo convertToDynamo(Policy policy) {
-//        return new PolicyDynamo(
-//            policy.getId().toString(),
-//            policy.getPolicyNumber(),
-//            policy.getPolicyHolderName(),
-//            policy.getPolicyTerm(),
-//            policy.getCoverageAmount(),
-//            policy.getPremium(),
-//            policy.getPolicyType()
-//        );
-//    }
+    
+    public void savePolicy(Policy policy) {
+    	String idStr = policy.getId() != null ? policy.getId().toString() : UUID.randomUUID().toString();
+        PolicyDynamo policyDynamo = new PolicyDynamo(
+        	idStr,
+            policy.getPolicyNumber(),
+            policy.getPolicyHolderName(),
+            policy.getPolicyTerm(),
+            policy.getCoverageAmount(),
+            policy.getPremium(),
+            policy.getPolicyType()
+        );
+        savePolicy(policyDynamo); // reuse existing method
+    }
+
 
 }
