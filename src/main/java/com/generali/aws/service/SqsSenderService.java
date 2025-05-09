@@ -15,8 +15,7 @@ public class SqsSenderService {
     private final SqsClient sqsClient;
     private final ObjectMapper objectMapper;
 
-    @Value("${cloud.aws.sqs.queue-name}") 
-    private String queueName;
+    @Value("${cloud.aws.sqs.queue-name}") String queueName;
 
     public SqsSenderService(SqsClient sqsClient, ObjectMapper objectMapper) {
         this.sqsClient = sqsClient;

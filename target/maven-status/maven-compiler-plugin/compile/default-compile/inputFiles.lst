@@ -1,5 +1,9 @@
+D:\project\generali-aws-sns-sqs\src\main\java\com\generali\aws\model\Policy.java
 D:\project\generali-aws-sns-sqs\src\main\java\com\generali\aws\Application.java
-D:\project\generali-aws-sns-sqs\src\main\java\com\generali\aws\Policy.java
-D:\project\generali-aws-sns-sqs\src\main\java\com\generali\aws\PolicyController.java
-D:\project\generali-aws-sns-sqs\src\main\java\com\generali\aws\AwsConfig.java
-D:\project\generali-aws-sns-sqs\src\main\java\com\generali\aws\SnsPublisherService.java
+D:\project\generali-aws-sns-sqs\src\main\java\com\generali\aws\controller\PolicyController.java
+D:\project\generali-aws-sns-sqs\src\main\java\com\generali\aws\listener\SqsConsumer.java
+D:\project\generali-aws-sns-sqs\src\main\java\com\generali\aws\entity\PolicyDynamo.java
+D:\project\generali-aws-sns-sqs\src\main\java\com\generali\aws\service\DynamoDbService.java
+D:\project\generali-aws-sns-sqs\src\main\java\com\generali\aws\config\AwsConfig.java
+D:\project\generali-aws-sns-sqs\src\main\java\com\generali\aws\service\SnsPublisherService.java
+D:\project\generali-aws-sns-sqs\src\main\java\com\generali\aws\service\SqsSenderService.java

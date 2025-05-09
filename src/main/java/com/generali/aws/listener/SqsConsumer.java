@@ -20,7 +20,7 @@ public class SqsConsumer {
     private final DynamoDbService dynamoDbService;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private final String queueName = "my-queue"; // You can externalize this if needed
+    private final String queueName = "my-queue"; // Externalize if needed
 
     @Scheduled(fixedRate = 5000)
     public void pollMessages() {
@@ -38,28 +38,39 @@ public class SqsConsumer {
             List<Message> messages = sqsClient.receiveMessage(receiveRequest).messages();
 
             for (Message msg : messages) {
-                System.out.println("Received from SQS: " + msg.body());
+                try {
+                    System.out.println("Received from SQS: " + msg.body());
 
-                // Step 1: Read the SNS envelope
-                JsonNode snsEnvelope = objectMapper.readTree(msg.body());
+                    String policyJson;
+                    JsonNode root = objectMapper.readTree(msg.body());
 
-                // Step 2: Extract the actual Policy JSON string from the "Message" field
-                String policyJson = snsEnvelope.get("Message").asText();
+                    // Determine if it's an SNS envelope or a direct SQS message
+                    if (root.has("Message")) {
+                        policyJson = root.get("Message").asText(); // SNS-wrapped
+                    } else {
+                        policyJson = msg.body(); // direct message
+                    }
 
-                // Step 3: Deserialize the actual Policy object
-                Policy policy = objectMapper.readValue(policyJson, Policy.class);
+                    // Deserialize to Policy object
+                    Policy policy = objectMapper.readValue(policyJson, Policy.class);
 
-                // Save to DynamoDB
-                dynamoDbService.savePolicy(policy);
+                    // Save to DynamoDB
+                    dynamoDbService.savePolicy(policy);
 
-                // Delete the message
-                sqsClient.deleteMessage(DeleteMessageRequest.builder()
-                        .queueUrl(queueUrl)
-                        .receiptHandle(msg.receiptHandle())
-                        .build());
+                    // Delete the message from SQS
+                    sqsClient.deleteMessage(DeleteMessageRequest.builder()
+                            .queueUrl(queueUrl)
+                            .receiptHandle(msg.receiptHandle())
+                            .build());
+
+                } catch (Exception ex) {
+                    System.err.println("Error processing message: " + msg.body());
+                    ex.printStackTrace();
+                }
             }
 
         } catch (Exception e) {
+            System.err.println("Failed to poll messages from SQS");
             e.printStackTrace();
         }
     }

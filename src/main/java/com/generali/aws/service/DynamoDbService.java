@@ -3,6 +3,8 @@ package com.generali.aws.service;
 import com.generali.aws.entity.PolicyDynamo;
 import com.generali.aws.model.Policy;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -23,7 +25,7 @@ public class DynamoDbService {
         this.tableName = tableName;
     }
 
-    public void savePolicy(PolicyDynamo policyDynamo) {
+    public void storePolicy(PolicyDynamo policyDynamo) {
         DynamoDbTable<PolicyDynamo> policyTable = enhancedClient.table(
             tableName,
             TableSchema.fromBean(PolicyDynamo.class)
@@ -43,8 +45,18 @@ public class DynamoDbService {
             policy.getPremium(),
             policy.getPolicyType()
         );
-        savePolicy(policyDynamo); // reuse existing method
+        storePolicy(policyDynamo);
     }
+    
+    public List<PolicyDynamo> getAllPolicies() {
+        DynamoDbTable<PolicyDynamo> policyTable = enhancedClient.table(
+            tableName,
+            TableSchema.fromBean(PolicyDynamo.class)
+        );
 
+        List<PolicyDynamo> policies = new ArrayList<>();
+        policyTable.scan().items().forEach(policies::add);
+        return policies;
+    }
 
 }
